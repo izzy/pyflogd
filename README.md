@@ -27,19 +27,21 @@ pyflogd just start the script `pyflogd/pyflogd.py` from your commandline.
 
 ## Usage
 
-> Usage:
->   pyflogd.py run [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
->   pyflogd.py start [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
->   pyflogd.py stop <folder> ...
->   pyflogd.py -h | --help
->   pyflogd.py -v | --version
-> 
-> Options:
->   -h --help                 Show this screen
->   -v --version              Show version
->   -r --recursive            Watch a folder recursivly
->   -f --only-files           Don't report events for folders
->   -o FILE --outfile=FILE    Write to file instead of stdout
+```
+Usage:
+ pyflogd.py run [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+ pyflogd.py start [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+ pyflogd.py stop <folder> ...
+ pyflogd.py -h | --help
+ pyflogd.py -v | --version
+
+Options:
+ -h --help                 Show this screen
+ -v --version              Show version
+ -r --recursive            Watch a folder recursivly
+ -f --only-files           Don't report events for folders
+ -o FILE --outfile=FILE    Write to file instead of stdout
+```
 
 ### run
 
