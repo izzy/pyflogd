@@ -3,14 +3,15 @@
 pyflogd - File system access monitoring daemon written in Python
 
 Usage:
-  pyflogd.py [-f | --only-files] [-d | --daemonize] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
-  pyflogd.py (-h | --help)
-  pyflogd.py (-v | --version)
+  pyflogd.py run [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+  pyflogd.py start [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+  pyflogd.py stop <folder> ...
+  pyflogd.py -h | --help
+  pyflogd.py -v | --version
 
 Options:
   -h --help                 Show this screen
   -v --version              Show version
-  -d --daemonize            Run in background
   -r --recursive            Watch a folder recursivly
   -f --only-files           Don't report events for folders
   -o FILE --outfile=FILE    Write to file instead of stdout
@@ -23,13 +24,17 @@ import os
 import pyinotify
 import json
 
-from docopt import docopt
+from docopt import docopt, DocoptExit
 from schema import Schema, SchemaError
 
 pyflogd_version='0.0.1'
 arguments = docopt(__doc__, help=True, version='pyflogd '+pyflogd_version)
 
-def pyflogd_run():
+def pyflogd_run(pid_file=None):
+    if pid_file:
+        with open(pid_file, 'w') as f:
+            f.write(str(os.getpid()))
+
     wdd      = {}
     wm       = pyinotify.WatchManager()
     mask     = pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_OPEN | pyinotify.IN_CLOSE_NOWRITE | pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MODIFY | pyinotify.IN_ACCESS
@@ -41,6 +46,16 @@ def pyflogd_run():
         wdd[path] = wm.add_watch(path, mask, rec=arguments['--recursive'])
 
     notifier.loop()
+
+def pyflog_cleanup(pid_file):
+    try:
+        with open(pid_file, 'r') as f:
+            os.kill(int(f.read()), signal.SIGTERM)
+        os.unlink(pid_file)
+    except OSError as e:
+        print('Could not stop daemon with lockfile' + pid_file)
+    exit(255)
+    
 
 class EventHandler(pyinotify.ProcessEvent):
     def create_event_info(self, event, event_type):
@@ -84,7 +99,8 @@ for path in arguments['<folder>']:
     try:
         Schema(os.path.exists).validate(path)
     except SchemaError:
-        print('Path "' + path + '" does not exist')
+        print('\nPath "' + path + '" does not exist\n')
+        raise DocoptExit
 
 if arguments['--outfile']:
     try:
@@ -92,26 +108,36 @@ if arguments['--outfile']:
     except SchemaError:
         print('Path "' + arguments['--outfile'] + '"')
 
-if arguments['--daemonize']:
+if arguments['start'] or arguments['stop']:
     import daemon
     import signal
     import lockfile
     import hashlib
 
-    proc_hash = hashlib.md5(json.dumps(arguments['<folder>'], sort_keys=True))
-    pid_file = '/var/run/pyflogd_' + proc_hash + '.pid'
+    m = hashlib.md5()
+    m.update(json.dumps(arguments['<folder>'], sort_keys=True))
+    proc_hash = m.hexdigest()
+    lock_file = '/tmp/pyflogd_' + str(proc_hash)
+    pid_file = lock_file + '.pid'
 
-    context = daemon.DaemonContext(
-        pidfile = lockfile.FileLock(pid_file)
-    )
-    context.signal_map = {
-        signal.SIGTERM: pyflogd.cleanup,
-        signal.SIGHUP:  'terminate',
-        signal.SIGUSR1: pyflogd.print_status
-    }
+    if arguments['stop']:
+        if not os.path.isfile(pid_file):
+            print('There is no process running for the supplied directories.')
+            exit(255)
 
-    with context:
-        pyflogd_run()
+        pyflog_cleanup(pid_file)
+    else:
+        if os.path.isfile(pid_file) and os.path.isfile(lock_file + '.lock'):
+            print('There is already a pyflogd process for these directories '
+                  'running.')
+            exit(255)
+                
+        context = daemon.DaemonContext(
+            pidfile = lockfile.FileLock(lock_file),
+            working_directory = os.getcwd()
+        )
+        with context:
+            pyflogd_run(pid_file)
 else:
     pyflogd_run()
 
