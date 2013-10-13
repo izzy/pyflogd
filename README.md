@@ -5,13 +5,13 @@ potential file system bottlenecks. It uses the inotify kernel API.
 
 ## Requirements
 
-* Python
-** pyinotify
-** json
-** daemon
-** signal
-** lockfile
-** hashlib
+- Python
+  - pyinotify
+  - json
+  - daemon
+  - signal
+  - lockfile
+  - hashlib
 
 ### Notes on using pyflogd on Ubuntu
 
