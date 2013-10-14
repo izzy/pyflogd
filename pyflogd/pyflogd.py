@@ -3,11 +3,11 @@
 pyflogd - File system access monitoring daemon written in Python
 
 Usage:
-  pyflogd.py run [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
-  pyflogd.py start [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
-  pyflogd.py stop <folder> ...
-  pyflogd.py -h | --help
-  pyflogd.py -v | --version
+  pyflogd run [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+  pyflogd start [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+  pyflogd stop <folder> ...
+  pyflogd -h | --help
+  pyflogd -v | --version
 
 Options:
   -h --help                 Show this screen
@@ -27,7 +27,7 @@ import json
 from docopt import docopt, DocoptExit
 from schema import Schema, SchemaError
 
-pyflogd_version='0.1.0'
+pyflogd_version='0.1.1'
 arguments = docopt(__doc__, help=True, version='pyflogd '+pyflogd_version)
 
 def pyflogd_run(pid_file=None):
@@ -55,7 +55,6 @@ def pyflog_cleanup(pid_file):
     except OSError as e:
         print('Could not stop daemon with lockfile' + pid_file)
     exit(255)
-    
 
 class EventHandler(pyinotify.ProcessEvent):
     def create_event_info(self, event, event_type):

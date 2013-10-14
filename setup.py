@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='pyflogd',
-      version='0.1.0',
+      version='0.1.1',
       description='File system access monitoring daemon',
       author='Izzy Kulbe',
       author_email='pyflogd@unikorn.me',

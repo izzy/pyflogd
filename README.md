@@ -3,15 +3,21 @@
 pyflogd is a monitoring tool to support you when tracking down 
 potential file system bottlenecks. It uses the inotify kernel API.
 
+pyflogd uses a dev-friendly JSON output format. Every line will contain one 
+JSON object with a type and a path property. You can parse the lines and 
+analyse which files are accessed and written the most. 
+
 ## Requirements
 
 - Python
-  - pyinotify
-  - json
   - daemon
-  - signal
-  - lockfile
+  - docopt
   - hashlib
+  - json
+  - lockfile
+  - pyinotify
+  - schema
+  - signal
 
 ### Notes on using pyflogd on Ubuntu
 
@@ -20,20 +26,32 @@ known bug regarding recursive watching. When using this version it is not
 possible to track files and folders in folders that are created after pyflogd 
 has started. To solve this, you can run `pip install --upgrade pyinotify`.
 
+### Python 3 compatibility
+
+pyflogd depends on python-daemon which is currently not compatible with Python 
+3. Running pyflogd as daemon will not work without this, but the `run` command 
+should work just fine. 
+
 ## Installation
 
-The setup.py is currently untested and unfinished. At this point to use 
-pyflogd just start the script `pyflogd/pyflogd.py` from your commandline. 
+To install pyflog run the following commands:
+
+```
+git clone https://github.com/mkzero/pyflogd
+python2 setup.py install
+```
+
+After that you should be able to use the `pyflod` command from you commandline.
 
 ## Usage
 
 ```
 Usage:
- pyflogd.py run [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
- pyflogd.py start [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
- pyflogd.py stop <folder> ...
- pyflogd.py -h | --help
- pyflogd.py -v | --version
+ pyflogd run [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+ pyflogd start [-f | --only-files] [-r | --recursive] [-o <file> | --outfile=<file>] <folder> ...
+ pyflogd stop <folder> ...
+ pyflogd -h | --help
+ pyflogd -v | --version
 
 Options:
  -h --help                 Show this screen
@@ -50,7 +68,7 @@ stdout when no `outfile` is supplied.
 
 Example:
 ```
-pyflogd.py run --outfile=/tmp/pyflogd.log --recursive /path/to/folder1 \
+pyflogd run --outfile=/tmp/pyflogd.log --recursive /path/to/folder1 \
            /path/to/folder2 /path/to/folder3
 ```
 
@@ -63,8 +81,8 @@ as for the start command and omit all other options like `outfile` or
 
 Example:
 ```
-pyflogd.py start --outfile=/tmp/pyflogd.log --recursive /path/to/folder1 \
+pyflogd start --outfile=/tmp/pyflogd.log --recursive /path/to/folder1 \
            /path/to/folder2 /path/to/folder3
 
-pyflogd.py stop /path/to/folder1 /path/to/folder2 /path/to/folder3
+pyflogd stop /path/to/folder1 /path/to/folder2 /path/to/folder3
 ```
