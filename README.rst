@@ -39,7 +39,14 @@ Python 3. Running pyflogd as daemon will not work without this, but the
 Installation
 ------------
 
-To install pyflog run the following commands:
+You can use pip/PyPI, which will automatically resolve all dependencies:
+
+::
+
+    pip install pyflogd
+
+
+To install pyflog you can also clone the repo and install it via setup.py:
 
 ::
 
