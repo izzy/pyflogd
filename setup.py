@@ -1,10 +1,14 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 from setuptools import setup
+
+with open('README.rst') as f:
+    long_description = f.read()
 
 setup(name='pyflogd',
       version='0.1.1',
       description='File system access monitoring daemon',
+      long_description=long_description,
       author='Izzy Kulbe',
       author_email='pyflogd@unikorn.me',
       license='MIT',
