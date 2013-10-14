@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 """
 pyflogd - File system access monitoring daemon written in Python
 
@@ -27,7 +27,7 @@ import json
 from docopt import docopt, DocoptExit
 from schema import Schema, SchemaError
 
-pyflogd_version='0.0.1'
+pyflogd_version='0.1.0'
 arguments = docopt(__doc__, help=True, version='pyflogd '+pyflogd_version)
 
 def pyflogd_run(pid_file=None):
