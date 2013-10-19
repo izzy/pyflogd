@@ -112,6 +112,7 @@ To examine the results of pyflogd you can use logstash. A simple logstash
 configuration could look like:
 
 ::
+
     input {
         file {
             path   => "/path/to/pyflogd.log"
