@@ -104,3 +104,35 @@ Example:
                /path/to/folder2 /path/to/folder3
 
     pyflogd stop /path/to/folder1 /path/to/folder2 /path/to/folder3
+
+Using pyflogd with logstash
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To examine the results of pyflogd you can use logstash. A simple logstash 
+configuration could look like:
+
+::
+    input {
+        file {
+            path   => "/path/to/pyflogd.log"
+            format => "json"
+            type   => "filesystem"
+        }
+    }
+    
+    filter {
+        json {
+            source    => "message"
+            add_field => [ "fs_access_type", "%{type}" ]
+            add_field => [ "fs_access_path", "%{path}" ]
+        }
+    }
+
+    output {
+        elasticsearch {
+            host => "127.0.0.1"
+        }
+    }
+
+In the long term a native logstash ``json_event`` output is planned to support 
+direct input to logstash without any filters.
