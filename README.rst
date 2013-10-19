@@ -135,7 +135,7 @@ configuration could look like:
         }
     }
 
-.. image:: http://github.com/mkzero/pyflogd/raw/logstash.jpg
+.. image:: http://raw.github.com/mkzero/pyflogd/master/logstash.jpg
 
 In the long term a native logstash ``json_event`` output is planned to support 
 direct input to logstash without any filters.
