@@ -29,13 +29,6 @@ not possible to track files and folders in folders that are created
 after pyflogd has started. To solve this, you can run
 ``pip install --upgrade pyinotify``.
 
-Python 3 compatibility
-~~~~~~~~~~~~~~~~~~~~~~
-
-pyflogd depends on python-daemon which is currently not compatible with
-Python 3. Running pyflogd as daemon will not work without this, but the
-``run`` command should work just fine.
-
 Installation
 ------------
 
@@ -50,7 +43,7 @@ To install pyflog you can also clone the repo and install it via setup.py:
 
 ::
 
-    git clone https://github.com/mkzero/pyflogd
+    git clone https://github.com/izzy/pyflogd
     python2 setup.py install
 
 After that you should be able to use the ``pyflod`` command from you
@@ -135,7 +128,7 @@ configuration could look like:
         }
     }
 
-.. image:: https://raw.github.com/mkzero/pyflogd/master/logstash.jpg
+.. image:: https://raw.github.com/izzy/pyflogd/master/logstash.jpg
 
 In the long term a native logstash ``json_event`` output is planned to support 
 direct input to logstash without any filters.

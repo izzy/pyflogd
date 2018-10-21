@@ -114,7 +114,7 @@ if arguments['start'] or arguments['stop']:
     import hashlib
 
     m = hashlib.md5()
-    m.update(json.dumps(arguments['<folder>'], sort_keys=True))
+    m.update(json.dumps(arguments['<folder>'], sort_keys=True).encode('utf-8'))
     proc_hash = m.hexdigest()
     lock_file = '/tmp/pyflogd_' + str(proc_hash)
     pid_file = lock_file + '.pid'

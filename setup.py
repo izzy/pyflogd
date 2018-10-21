@@ -6,7 +6,7 @@ with open('README.rst') as f:
     long_description = f.read()
 
 setup(name='pyflogd',
-      version='0.1.1',
+      version='1.0.0',
       description='File system access monitoring daemon',
       long_description=long_description,
       author='Izzy Kulbe',
